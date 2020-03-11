@@ -4,10 +4,13 @@ import axios from "axios"
 import Card from "./Components/Card"
 
 class App extends React.Component {
-  
-  state = {
-      mydata : [],
+  constructor() {
+    super()
+    this.state = {
+        mydata : [],
+        followers: []
     }
+  }
   
   
 
@@ -16,41 +19,38 @@ class App extends React.Component {
     .then(res => {
       console.log(res.data)
       this.setState ({
-        mydata: [res.data].flat()
+        mydata: res.data
       })
       
     })
     .catch (err => console.log (err.message))
-  }
 
-  componentDidUpdate(prevProps, prevState) {
-    if (prevState.mydata !== this.state.mydata) {
-      axios.get("https://api.github.com/users/adriannasaruk/followers")
+    //followers axios call
+    axios.get("https://api.github.com/users/adriannasaruk/followers") 
       .then(res => {
       
         this.setState ({
-         mydata: res.data
+         followers: res.data
         })
+        console.log(this.state.followers)
       })
       .catch(err => (err.message))
     }
-  }
-
-
-
+  
+  
     render() {
-      
       return (
         <div>
-            {this.state.mydata.map (item => (
-            <Card item= {item} />
-            ))}
+            <Card item ={this.state.mydata} />
+            {this.state.followers.map (item => {
+             {console.log(item)}
+            return( <Card item= {item} />
+    )})}
         </div>
         
       );
     }
-   
-}
+  }
 
   
 
